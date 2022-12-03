@@ -1,0 +1,18 @@
+/* white bold italic text */
+.Select-value-label {
+    color: white !important;
+    font-weight: bold;
+}
+
+.Select-placeholder {
+    color: lightgray !important;
+}
+
+.Select-control {
+    background-color: dimgray !important;
+}
+
+.Select-menu-outer {
+    background-color: darkgray !important;
+    color: white;
+}

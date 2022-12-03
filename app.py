@@ -23,7 +23,6 @@ launch_uid = uuid4()
 
 import diskcache
 
-custom_dropdown_style = {'background-color': '#444', 'color': 'white'}
 
 background_callback_manager = DiskcacheLongCallbackManager(
     background_cache := diskcache.Cache("./cache"),
@@ -61,7 +60,7 @@ dropdowns = dbc.Container(
             dbc.Col([
                 # dbc.Label("map hash"),
                 dcc.Dropdown([], id='map-hash-select', placeholder="select mapHash",
-                             style=custom_dropdown_style),
+                             ),
 
             ]
 
@@ -69,7 +68,7 @@ dropdowns = dbc.Container(
             dbc.Col([
                 # dbc.Label("setting hash"),
                 dcc.Dropdown([], id='settings-hash-select',
-                             placeholder="select settingHash", style=custom_dropdown_style),
+                             placeholder="select settingHash", ),
 
             ]
 
@@ -77,7 +76,7 @@ dropdowns = dbc.Container(
             dbc.Col(
                 [
                     # dbc.Label("run id"),
-                    dcc.Dropdown([], id='run-id-select', placeholder="select runId", style=custom_dropdown_style),
+                    dcc.Dropdown([], id='run-id-select', placeholder="select runId", ),
                 ],
 
             ),
@@ -86,7 +85,7 @@ dropdowns = dbc.Container(
 
                     # dbc.Label("chart type"),
                     dcc.Dropdown([], id='chart-type-select',
-                                 placeholder="select chart type", style=custom_dropdown_style),
+                                 placeholder="select chart type", ),
                 ],
 
             ),
@@ -117,7 +116,7 @@ dropdowns = dbc.Container(
             ),
 
         ],
-        style={'display': 'flex', 'justify-content': 'center', 'align-items': 'center', 'color': 'white', },
+        style={'display': 'flex', 'justify-content': 'center', 'align-items': 'center', },
     ),
 
 )

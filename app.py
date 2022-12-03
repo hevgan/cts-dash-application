@@ -1,3 +1,4 @@
+import json
 import time
 from typing import Union
 from uuid import uuid4
@@ -14,6 +15,7 @@ from dash.long_callback import DiskcacheLongCallbackManager
 from dash_bootstrap_templates import load_figure_template
 from flask_caching import Cache
 from icecream import ic
+import plotly.express as px
 
 from endpoint import integration
 
@@ -264,56 +266,53 @@ def get_chart(map_hash: str, settings_hash: str, run_id: str, chart_type: str) -
         time.sleep(1)
 
     if chart_type == 'replay':
-        return integration.get_simulation_replay(map_hash, settings_hash, run_id)
+        return integration.get_simulation_replay(map_hash, settings_hash, run_id, chart_type)
     elif chart_type == 'position heatmap':
         return integration.get_simulation_position_heatmap(map_hash, settings_hash, run_id)
     elif chart_type == 'POSITION_HEATMAP':
-        import requests
-        api_url = 'https://ctsbackend.bieda.it/api/processed/find'
-        headers = {
-            'ApiKey': '1234'
-        }
-        params = {
-            'SettingsHash': settings_hash,
-            'MapHash': map_hash,
-            'RunId': run_id,
-            'ChartType': 'POSITION_HEATMAP'
-        }
-        response = requests.get(url=api_url, headers=headers, params=params)
-
-        # load json to object
-        # content = content.replace('"_id" : ObjectId("638361e8e21a30ba017e8db7"), ', '')
-        # content = content.replace('\\\\', '\\')
-        # print(content)
-        # loaded_json = json.loads(response.content)
-        # frame = loaded_json.get("Data")[0]
-
-        # ic(frame)
-        # frame = json.loads(frame)
-        # metadata = loaded_json.get("Metadata")
-        # min_x, max_x, min_y, max_y = metadata.get("min_x"), metadata.get("max_x"), metadata.get("min_y"), metadata.get("max_y")
-        min_x, max_x, min_y, max_y = -10, 10, -10, 10
-        scale_factor = 100
-        # ic(min_x, min_y, max_y, max_x)
-
-        # df = frame
-
-        # mask = df.other_filterable_car_attributes.apply(lambda x: 'red' in x)
-        # df_filtered_red = df[mask]
-        # ic(df.tail(20))
-        #  fig = px.density_heatmap(df, nbinsx=30,
-        #                           nbinsy=30, x="x", y="y",
-        #                           title="Density heatmap  ")
-        #  return fig
-        return integration.placeholder_chart(map_hash, settings_hash, run_id, chart_type)
-
-
-
-
+        fig = get_position_heatmap(map_hash, run_id, settings_hash)
+        return fig
     elif chart_type:
-        return integration.placeholder_chart(map_hash, settings_hash, run_id, chart_type)
+        return {}
     else:
         return {}
+
+
+def get_position_heatmap(map_hash, run_id, settings_hash):
+    import requests
+    api_url = 'https://ctsbackend.bieda.it/api/processed/find'
+    headers = {
+        'ApiKey': '1234'
+    }
+    params = {
+        'SettingsHash': settings_hash,
+        'MapHash': map_hash,
+        'RunId': run_id,
+        'ChartType': 'POSITION_HEATMAP'
+    }
+    response = requests.get(url=api_url, headers=headers, params=params)
+    # load json to object
+    # content = content.replace('"_id" : ObjectId("638361e8e21a30ba017e8db7"), ', '')
+    # content = content.replace('\\\\', '\\')
+    # print(content)
+    loaded_json = json.loads(response.content)
+    frame = loaded_json.get("Data")[0]
+    ic(frame)
+    # frame = json.loads(frame)
+    metadata = loaded_json.get("Metadata")
+    min_x, max_x, min_y, max_y = metadata.get("min_x"), metadata.get("max_x"), metadata.get("min_y"), metadata.get(
+        "max_y")
+    min_x, max_x, min_y, max_y = -10, 10, -10, 10
+    scale_factor = 100
+    # ic(min_x, min_y, max_y, max_x)
+    df = frame
+    # mask = df.other_filterable_car_attributes.apply(lambda x: 'red' in x)
+    # df_filtered_red = df[mask]
+    # ic(df.tail(20))
+    fig = px.density_heatmap(df, nbinsx=30,
+                             nbinsy=30, x="x", y="y",
+                             title="Density heatmap  ")
+    return fig
 
 
 @memoization_cache.memoize(timeout=30)

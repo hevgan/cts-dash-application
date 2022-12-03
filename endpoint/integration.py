@@ -110,30 +110,30 @@ def load_replay_position_plot_data_from_file() -> (pd.DataFrame, dict):
     return data, metadata
 
 
-def get_simulation_replay(map_hash : str, settings_hash : str, run_id : str) -> go.Figure:
+def get_simulation_replay(map_hash : str, settings_hash : str, run_id : str, chart_type: str) -> go.Figure:
     if not os.path.exists('replay-simulation.json'):
         dump_replay_position_plot_data_to_file()
 
     dataframe_to_plot, simulation_metadata = load_replay_position_plot_data_from_file()
     # change to query_replay_data once redoing app as a one page
 
-    fig = px.density_heatmap(dataframe_to_plot,
+    fig = px.scatter(dataframe_to_plot,
                      x="position_x",
                      y="position_y",
-                     nbinsx = 10,
-                        nbinsy = 10,
-                     # animation_frame="frame",
-                     # color="color",
-                     # animation_group="id",
-                     # hover_name="id",
-                     # size="display_size",
-                     # log_x=False,
-                     # size_max=20,
-                     # range_x=[simulation_metadata['min_x'], simulation_metadata['max_x']],
-                     # range_y=[simulation_metadata['min_y'], simulation_metadata['max_y']],
+                     # nbinsx = 10,
+                     #    nbinsy = 10,
+                     animation_frame="frame",
+                     color="color",
+                     animation_group="id",
+                     hover_name="id",
+                     size="display_size",
+                     log_x=False,
+                     size_max=20,
+                     range_x=[simulation_metadata['min_x'], simulation_metadata['max_x']],
+                     range_y=[simulation_metadata['min_y'], simulation_metadata['max_y']],
                      )
-    # fig.layout.updatemenus[0].buttons[0].args[1]["frame"]["duration"] = 1000 / (
-    #             simulation_metadata.get('frames_per_second') or 60)
+    fig.layout.updatemenus[0].buttons[0].args[1]["frame"]["duration"] = 1000 / (
+                simulation_metadata.get('frames_per_second') or 60)
 
     return fig
 

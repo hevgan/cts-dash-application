@@ -1,0 +1,7 @@
+# ignore memoization cache
+/memoization_cache/*
+
+#ignore cache for long callbacks
+/cache/*
+
+/.idea/workspace.xml

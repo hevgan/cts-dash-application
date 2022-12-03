@@ -32,7 +32,6 @@ chart_types = ['replay', 'position heatmap',  'map', 'settings', 'speed heatmap'
 URL = ''
 
 # TODO @Aleksander add car features, frame count/s, min and max map size to metadata
-# TODO cache the chart data
 
 # # create function to get data from api
 # def fetch_data(endpoint : str, params : dict = None) -> dict:

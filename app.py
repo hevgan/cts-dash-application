@@ -182,7 +182,6 @@ def update_dropdowns(map_hash, settings_hash, run_id, chart_type):
     return values
 
 
-# TODO add running, cancel and long_callback if decided
 @dash.callback(
     output=(Output(component_id='chart-container', component_property='children')),
     inputs=(Input(component_id='run-simulation-button', component_property='n_clicks'),

@@ -358,6 +358,11 @@ def get_position_heatmap(map_hash, run_id, settings_hash):
 def get_matching_simulation_from_backend(map_hash, settings_hash, run_id, chart_type):
     return integration.get_matching_simulations(map_hash, settings_hash, run_id, chart_type)
 
+# health check endpoint returns 200 if app is running
+@app.server.route('/health')
+def health():
+    from flask import  make_response
+    return make_response({}, 200)
 
 if __name__ == '__main__':
     app.run_server(port=8095, debug=True)

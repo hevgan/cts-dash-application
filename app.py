@@ -245,7 +245,7 @@ app.layout = html.Div([
         [
             dbc.NavItem(dbc.NavLink("Home", href="/")),
         ],
-        brand="City Traffic Simulator",
+        brand="City Traffic Simulator PROD",
         brand_href="#",
         color="secondary",
         dark=True,
@@ -310,7 +310,8 @@ def get_position_heatmap(map_hash, run_id, settings_hash):
     # ic(df.tail(20))
     fig = px.density_heatmap(df, nbinsx=30,
                              nbinsy=30, x="x", y="y",
-                             title="Density heatmap  ")
+                             title="Density heatmap  ",
+                             template="plotly_dark")
     return fig
 
 

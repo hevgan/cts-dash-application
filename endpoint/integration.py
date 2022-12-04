@@ -65,7 +65,6 @@ def dump_replay_position_plot_data_to_file():
 
     for frame in data['frames'][100:]:
         for car in frame['cars']:
-            print(frame['frameNumber'])
 
             x = car["position"]["x"]
             y = car["position"]["y"]
@@ -131,6 +130,7 @@ def get_simulation_replay(map_hash : str, settings_hash : str, run_id : str, cha
                      size_max=20,
                      range_x=[simulation_metadata['min_x'], simulation_metadata['max_x']],
                      range_y=[simulation_metadata['min_y'], simulation_metadata['max_y']],
+                     template="plotly_dark"
                      )
     fig.layout.updatemenus[0].buttons[0].args[1]["frame"]["duration"] = 1000 / (
                 simulation_metadata.get('frames_per_second') or 60)
@@ -307,13 +307,6 @@ def get_matching_simulations(map_hash = None, settings_hash = None, run_id = Non
         available_combinations.append(
             {'map_hash': item['mapHash'], 'settings_hash': item['settingsHash'], 'run_id': item['runId']})
 
-    available_combinations.append({'map_hash': 'aaaa', 'settings_hash': 'bbbb', 'run_id': '1'})
-    available_combinations.append({'map_hash': 'bbbb', 'settings_hash': 'bbbb', 'run_id': '3'})
-    available_combinations.append({'map_hash': 'cccc', 'settings_hash': 'aaaa', 'run_id': '1'})
-    available_combinations.append({'map_hash': 'aaaa', 'settings_hash': 'bbbb', 'run_id': '2'})
-    available_combinations.append({'map_hash': 'aaaa', 'settings_hash': 'cccc', 'run_id': '1'})
-    available_combinations.append({'map_hash': 'cccc', 'settings_hash': 'bbbb', 'run_id': '2'})
-    available_combinations.append({'map_hash': 'cccc', 'settings_hash': 'bbbb', 'run_id': '1'})
 
 
     # filter available combination by map_hash, settings_hash, run_id, chart_type (if not None)

@@ -1,7 +1,7 @@
 /* white bold italic text */
 .Select-value-label {
     color: white !important;
-    font-weight: bold;
+    font-weight: bold !important;
 }
 
 .Select-placeholder {
@@ -14,5 +14,5 @@
 
 .Select-menu-outer {
     background-color: darkgray !important;
-    color: white;
+    color: white !important;
 }

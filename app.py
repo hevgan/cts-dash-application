@@ -1,4 +1,5 @@
 import json
+import os
 import time
 from typing import Union
 from uuid import uuid4
@@ -137,7 +138,7 @@ result_container = dbc.Container([
         # dbc row component with fixed height
 
         dbc.Row([
-            dbc.Col(id='chart-container', width=12),
+            dbc.Col(id='chart-container', width=12, style={'height': '100%'}),
         ]),
 
     ],
@@ -256,13 +257,13 @@ app.layout = html.Div([
 ])
 
 
-@memoization_cache.memoize(timeout=TIMEOUT)  # in seconds
+#@memoization_cache.memoize(timeout=TIMEOUT)  # in seconds
 def get_chart(map_hash: str, settings_hash: str, run_id: str, chart_type: str) -> Union[Figure, dict]:
     # wait for 60 seconds five times
-    ic("waiting for 5 seconds")
-    for i in range(5):
-        ic(f"waiting {i + 1}")
-        time.sleep(1)
+    # ic("waiting for 5 seconds")
+    # for i in range(5):
+    #     ic(f"waiting {i + 1}")
+    #     time.sleep(1)
 
     if chart_type == 'replay':
         return integration.get_simulation_replay(map_hash, settings_hash, run_id, chart_type)
@@ -308,10 +309,48 @@ def get_position_heatmap(map_hash, run_id, settings_hash):
     # mask = df.other_filterable_car_attributes.apply(lambda x: 'red' in x)
     # df_filtered_red = df[mask]
     # ic(df.tail(20))
-    fig = px.density_heatmap(df, nbinsx=30,
-                             nbinsy=30, x="x", y="y",
-                             title="Density heatmap  ",
-                             template="plotly_dark")
+
+
+    #df = dataframe_to_plot
+    #df['z'] = {i : 1 for i in range(len(df))}
+    df['frame'] = {i : i for i in range(len(df))}
+    ic("generating chart")
+
+    if not os.path.exists('replay-simulation.json'):
+        integration.dump_replay_position_plot_data_to_file()
+
+    dataframe_to_plot, simulation_metadata = integration.load_replay_position_plot_data_from_file()
+    # change to query_replay_data once redoing app as a one page
+
+    df = dataframe_to_plot
+
+    df['z'] = {i : 1 for i in range(len(df))}
+
+    fig = px.density_heatmap(df,
+                             nbinsx=10,
+                             nbinsy=10,
+                             x="position_x",
+                             y="position_y",
+                             marginal_y="histogram",
+                             marginal_x="histogram",
+                             histfunc='sum',
+                             title="Density heatmap",
+                             template="plotly_dark",
+                             animation_frame="frame",
+                             animation_group="id",
+
+                             #animation_group="id",
+                             #hover_name="id",
+
+                             )
+
+    fig.update_yaxes(
+        scaleanchor="x",
+        scaleratio=1,
+    )
+
+    fig.layout.updatemenus[0].buttons[0].args[1]["frame"]["duration"] = 1000 / (
+                simulation_metadata.get('frames_per_second') or 60)
     return fig
 
 

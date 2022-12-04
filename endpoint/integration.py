@@ -65,6 +65,7 @@ def dump_replay_position_plot_data_to_file():
 
     for frame in data['frames'][100:]:
         for car in frame['cars']:
+            print(frame['frameNumber'])
 
             x = car["position"]["x"]
             y = car["position"]["y"]

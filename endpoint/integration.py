@@ -26,7 +26,7 @@ headers = {
 map_hashes = ['map_hash_1', 'map_hash_2', 'map_hash_3']
 settings_hashes = ['settings_hash_1', 'settings_hash_2', 'settings_hash_3']
 run_ids = ['run_id_1', 'run_id_2', 'run_id_3']
-chart_types = ['replay', 'position heatmap',  'map', 'settings', 'speed heatmap' 'acceleration heatmap', 'speed histogram', 'acceleration histogram']
+chart_types = ['replay simulation', 'position heatmap', 'speed heatmap', 'acceleration heatmap', 'attributes percentage']
 
 
 URL = ''
@@ -333,13 +333,12 @@ def get_matching_simulations(map_hash = None, settings_hash = None, run_id = Non
     # extract all run_ids from matching_combinations
     run_ids = [c.get('run_id') for c in matching_combinations]
     # extract all chart_types from matching_combinations
-    chart_types = [c.get('chart_type') for c in matching_combinations]
+    #chart_types = [c.get('chart_type') for c in matching_combinations]
 
     # only leave unique values in dicts
     map_hashes = list(set(map_hashes)) or []
     settings_hashes = list(set(settings_hashes)) or []
     run_ids = list(set(run_ids)) or []
-    chart_types = ['replay', 'position heatmap', 'POSITION_HEATMAP']
 
 
     return map_hashes, settings_hashes, run_ids, chart_types

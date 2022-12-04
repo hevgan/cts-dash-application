@@ -3,6 +3,7 @@ import os
 import time
 from typing import Union
 from uuid import uuid4
+import plotly.graph_objects as go
 
 import dash
 import dash_bootstrap_components as dbc
@@ -258,6 +259,103 @@ app.layout = html.Div([
 
 
 #@memoization_cache.memoize(timeout=TIMEOUT)  # in seconds
+def get_attributes_pie_chart(map_hash, run_id, settings_hash):
+    return integration.placeholder_chart()
+
+
+def get_speed_heatmap(map_hash, run_id, settings_hash):
+    return integration.placeholder_chart()
+
+
+def get_acceleration_heatmap(map_hash, run_id, settings_hash):
+    return integration.placeholder_chart()
+
+
+def get_simulation_replay(map_hash : str, settings_hash : str, run_id : str, chart_type: str) -> go.Figure:
+    import requests
+    api_url = 'https://ctsbackend.bieda.it/api/processed/find'
+    headers = {
+        'ApiKey': '1234'
+    }
+    params = {
+        'SettingsHash': settings_hash,
+        'MapHash': map_hash,
+        'RunId': run_id,
+        'ChartType': 'POSITION_HEATMAP'
+    }
+
+    ic(params)
+
+    response = requests.get(url=api_url, headers=headers, params=params)
+    ic(response)
+
+    # load json to object
+    # content = content.replace('"_id" : ObjectId("638361e8e21a30ba017e8db7"), ', '')
+    # content = content.replace('\\\\', '\\')
+    # print(content)
+    loaded_json = json.loads(response.content)
+    frame = loaded_json.get("Data")
+    ic(frame)
+    # frame = json.loads(frame)
+    metadata = loaded_json.get("Metadata")
+    min_x, max_x, min_y, max_y = metadata.get("min_x"), metadata.get("max_x"), metadata.get("min_y"), metadata.get(
+        "max_y")
+    min_x, max_x, min_y, max_y = -10, 10, -10, 10
+    scale_factor = 100
+    # ic(min_x, min_y, max_y, max_x)
+    dataframe_to_plot = frame
+    dataframe_to_plot['display_size'] = 20
+    dataframe_to_plot['display_color'] = 'red'
+
+
+
+
+    fig = px.scatter(dataframe_to_plot,
+                     x="x",
+                     y="y",
+                     # nbinsx = 10,
+                     #    nbinsy = 10,
+                     animation_frame="frame",
+                     color="display_color",
+                     animation_group="id",
+                     hover_name="id",
+                     size="display_size",
+                     log_x=False,
+                     size_max=20,
+                     range_x=[metadata['min_x'], metadata['max_x']],
+                     range_y=[metadata['min_y'], metadata['max_y']],
+                     template="plotly_dark",
+
+                     )
+    fig.layout.updatemenus[0].buttons[0].args[1]["frame"]["duration"] = 1000 / (
+                metadata.get('frames_per_second') or 6)
+    fig.update_yaxes(
+        scaleanchor="x",
+        scaleratio=1,
+    )
+
+    # fig.update_layout(xaxis=dict(showgrid=False),
+    #                   yaxis=dict(showgrid=False)
+    #                   )
+    # fig.update_layout(yaxis_visible=False, yaxis_showticklabels=False)
+    # fig.update_layout(xaxis_visible=False, xaxis_showticklabels=False)
+
+
+    fig.update_layout(
+        shapes=[
+
+            # Cubic Bezier Curves
+            dict(
+                type="path",
+                path="M 1,4 C 2,8 6,4 8,8",
+                line_color="MediumPurple",
+            ),
+
+        ]
+    )
+    return fig
+
+
 def get_chart(map_hash: str, settings_hash: str, run_id: str, chart_type: str) -> Union[Figure, dict]:
     # wait for 60 seconds five times
     # ic("waiting for 5 seconds")
@@ -265,12 +363,19 @@ def get_chart(map_hash: str, settings_hash: str, run_id: str, chart_type: str) -
     #     ic(f"waiting {i + 1}")
     #     time.sleep(1)
 
-    if chart_type == 'replay':
-        return integration.get_simulation_replay(map_hash, settings_hash, run_id, chart_type)
+    if chart_type == 'replay simulation':
+        return get_simulation_replay(map_hash, settings_hash, run_id, chart_type)
     elif chart_type == 'position heatmap':
-        return integration.get_simulation_position_heatmap(map_hash, settings_hash, run_id)
-    elif chart_type == 'POSITION_HEATMAP':
         fig = get_position_heatmap(map_hash, run_id, settings_hash)
+        return fig
+    elif chart_type == 'speed heatmap':
+        fig = get_speed_heatmap(map_hash, run_id, settings_hash)
+        return fig
+    elif chart_type == 'acceleration heatmap':
+        fig = get_acceleration_heatmap(map_hash, run_id, settings_hash)
+        return fig
+    elif chart_type == 'attributes percentage':
+        fig = get_attributes_pie_chart(map_hash, run_id, settings_hash)
         return fig
     elif chart_type:
         return {}
@@ -316,23 +421,15 @@ def get_position_heatmap(map_hash, run_id, settings_hash):
     df['frame'] = {i : i for i in range(len(df))}
     ic("generating chart")
 
-    if not os.path.exists('replay-simulation.json'):
-        integration.dump_replay_position_plot_data_to_file()
-
-    dataframe_to_plot, simulation_metadata = integration.load_replay_position_plot_data_from_file()
-    # change to query_replay_data once redoing app as a one page
-
-    #df = dataframe_to_plot
-
-    #df['z'] = {i : 1 for i in range(len(df))}
 
     fig = px.density_heatmap(df,
-                             nbinsx=10,
-                             nbinsy=10,
+                             nbinsx=100,
+                             nbinsy=100,
                              x="x",
                              y="y",
-                             marginal_y="histogram",
-                             marginal_x="histogram",
+                             #animation_frame="frame",
+                             #marginal_y="histogram",
+                             #marginal_x="histogram",
                              #histfunc='sum',
                              title="Density heatmap",
                              template="plotly_dark",
@@ -349,8 +446,8 @@ def get_position_heatmap(map_hash, run_id, settings_hash):
         scaleratio=1,
     )
 
-    fig.layout.updatemenus[0].buttons[0].args[1]["frame"]["duration"] = 1000 / (
-                simulation_metadata.get('frames_per_second') or 60)
+    # fig.layout.updatemenus[0].buttons[0].args[1]["frame"]["duration"] = 1000 / (
+    #             simulation_metadata.get('frames_per_second') or 6)
     return fig
 
 

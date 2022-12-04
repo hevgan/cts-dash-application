@@ -19,10 +19,6 @@ RUN pip install -r /requirements.txt
 # Copy app folder to app folder in container
 COPY / /usr/src/app/
 
-# Changing to non-root user
-RUN useradd -m appUser
-USER appUser
-
 #EXPOSE 8090
 
 # Run locally on port 8050

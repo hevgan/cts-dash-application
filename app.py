@@ -296,7 +296,7 @@ def get_position_heatmap(map_hash, run_id, settings_hash):
     # content = content.replace('\\\\', '\\')
     # print(content)
     loaded_json = json.loads(response.content)
-    frame = loaded_json.get("Data")[0]
+    frame = loaded_json.get("Data")
     ic(frame)
     # frame = json.loads(frame)
     metadata = loaded_json.get("Metadata")
@@ -322,22 +322,22 @@ def get_position_heatmap(map_hash, run_id, settings_hash):
     dataframe_to_plot, simulation_metadata = integration.load_replay_position_plot_data_from_file()
     # change to query_replay_data once redoing app as a one page
 
-    df = dataframe_to_plot
+    #df = dataframe_to_plot
 
-    df['z'] = {i : 1 for i in range(len(df))}
+    #df['z'] = {i : 1 for i in range(len(df))}
 
     fig = px.density_heatmap(df,
                              nbinsx=10,
                              nbinsy=10,
-                             x="position_x",
-                             y="position_y",
+                             x="x",
+                             y="y",
                              marginal_y="histogram",
                              marginal_x="histogram",
-                             histfunc='sum',
+                             #histfunc='sum',
                              title="Density heatmap",
                              template="plotly_dark",
-                             animation_frame="frame",
-                             animation_group="id",
+                             #animation_frame="frame",
+                             #animation_group="id",
 
                              #animation_group="id",
                              #hover_name="id",

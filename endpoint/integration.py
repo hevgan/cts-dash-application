@@ -26,7 +26,7 @@ headers = {
 map_hashes = ['map_hash_1', 'map_hash_2', 'map_hash_3']
 settings_hashes = ['settings_hash_1', 'settings_hash_2', 'settings_hash_3']
 run_ids = ['run_id_1', 'run_id_2', 'run_id_3']
-chart_types = ['replay simulation', 'position heatmap', 'speed heatmap', 'acceleration heatmap', 'attributes percentage']
+chart_types = ['replay simulation', 'position heatmap', 'speed heatmap', 'acceleration heatmap', 'attributes percentage', 'analitycal dashboard']
 
 
 URL = ''
@@ -292,7 +292,7 @@ def get_matching_simulations(map_hash = None, settings_hash = None, run_id = Non
 
 
     print("LOOKING FOR MATCHING SIMULATIONS")
-    api_url = 'https://ctsbackend.bieda.it/api/processed/list'
+    api_url = 'https://ctsbackend.bieda.it/api/simulation/list'
     headers = {
         'ApiKey': '1234'
     }

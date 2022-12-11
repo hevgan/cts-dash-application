@@ -147,13 +147,47 @@ additional_handlers = dbc.Container([
 )
 
 app.layout = html.Div([
-    dcc.Location(id='url', refresh=False),
     dbc.NavbarSimple(
         [
-            dbc.NavItem(dbc.NavLink("Home", href="/")),
+            dbc.DropdownMenu(
+                children=[
+                    dbc.DropdownMenuItem("Creators", header=True),
+                    dbc.DropdownMenuItem("Aleksander Błaszkiewicz", href='https://github.com/ablaszkiewicz'),
+                    dbc.DropdownMenuItem("Maciej Adryan", href="https://github.com/hevgan"),
+                    dbc.DropdownMenuItem("Michał Matejuk", href='https://github.com/matejukx'),
+                    dbc.DropdownMenuItem("Jakub Brzozowski", href="https://github.com/brzzw5k"),
+
+
+                    dbc.DropdownMenuItem("Repos", header=True),
+                    dbc.DropdownMenuItem("Backend", href='https://github.com/matejukx/city-traffic-simulator-backend'),
+                    dbc.DropdownMenuItem("Computational backend", href="https://github.com/brzzw5k/city-traffic-simulator-computing-microservice"),
+                    dbc.DropdownMenuItem("Dashboard", href="https://github.com/hevgan/cts-dash-application"),
+                    dbc.DropdownMenuItem("Simulation", href="https://github.com/ablaszkiewicz/city-traffic-simulation"),
+
+                    dbc.DropdownMenuItem("Documentation", header=True),
+                    dbc.DropdownMenuItem("Backend", href='https://ctsbackend.bieda.it/swagger/index.html'),
+
+                    dbc.DropdownMenuItem("External components", header=True),
+                    dbc.DropdownMenuItem("Flask", href="https://flask.palletsprojects.com/en/2.0.x/"),
+                    dbc.DropdownMenuItem("Dash", href="https://dash.plotly.com/"),
+                    dbc.DropdownMenuItem("Plotly", href="https://plotly.com/python/"),
+                    dbc.DropdownMenuItem("Dash Bootstrap Components", href="https://dash-bootstrap-components.opensource.faculty.ai/"),
+                    dbc.DropdownMenuItem("Diskcache", href="https://www.grantjenks.com/docs/diskcache/"),
+                    dbc.DropdownMenuItem("Unity", href="https://unity.com/"),
+
+
+                    dbc.DropdownMenuItem("University", header=True),
+                    dbc.DropdownMenuItem("GUT", href="https://pg.edu.pl/en/"),
+
+                ],
+                nav=True,
+                in_navbar=True,
+                label="Links",
+            ),
+
         ],
         brand="City Traffic Simulator PROD",
-        brand_href="#",
+        brand_href="javascript:window.location.reload(true)",
         color="secondary",
         dark=True,
     ),

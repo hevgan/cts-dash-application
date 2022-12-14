@@ -1,0 +1,22 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - 'develop'
+
+jobs:
+  build-pdf:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Run docker container
+        run: |
+          docker run --name hackmd2pdf hevgan/cts-inzynierka-md-latex-parser
+          docker cp hackmd2pdf:~/inzynierka_in_container.pdf ~/inzynierka.pdf
+      - name: Publish artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: inzynierka
+          path: ~/inzynierka.pdf

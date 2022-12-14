@@ -16,16 +16,16 @@ jobs:
       - name: Run docker container
         run: |
           docker run --name hackmd2pdf hevgan/cts-inzynierka-md-latex-parser
-          docker cp hackmd2pdf:~/inzynierka_in_container.pdf ~/inzynierka.pdf
+          docker cp hackmd2pdf:~/inzynierka_in_container.pdf ./inzynierka.pdf
       - name: Publish artifact
         uses: actions/upload-artifact@v2
         with:
           name: inzynierka
-          path: ~/inzynierka.pdf
+          path: ./inzynierka.pdf
       - name: Upload to S3
         uses: shallwefootball/s3-upload-action@master
         with:
           aws_key_id: ${{ secrets.AWS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws_bucket: ${{ secrets.AWS_BUCKET }}
-          source_dir: /inzynierka.pdf
+          source_dir: ./inzynierka.pdf

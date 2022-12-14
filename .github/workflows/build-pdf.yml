@@ -1,8 +1,11 @@
 name: Build PDF
 
 on:
+  push:
+    branches:
+      - 'main'
   schedule:
-    - cron: '* * * * *'
+    - cron: '*/5 * * * *'
 
 jobs:
   build-pdf:
@@ -19,3 +22,12 @@ jobs:
         with:
           name: inzynierka
           path: ~/inzynierka.pdf
+      //upload file to aws s3
+      - name: Upload to S3
+        uses: shallwefootball/s3-sync-action@master
+        with:
+          aws_key_id: ${{ secrets.AWS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_bucket: ${{ secrets.AWS_BUCKET }}
+          source_dir: ~/inzynierka.pdf
+

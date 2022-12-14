@@ -30,3 +30,4 @@ jobs:
           aws-region: 'eu-central-1'
           aws-bucket: ${{ secrets.AWS_BUCKET }}
           file-path: './inzynierka.pdf'
+          destination-dir: 'output'

@@ -22,12 +22,6 @@ jobs:
         with:
           name: inzynierka
           path: ./inzynierka.pdf
-      - name: Make directory
-        run: mkdir -p ./s3
-      - name: Copy artifact
-        run: cp ./inzynierka.pdf ./s3
-      - name: Where am I
-        run: pwd
       - name: Upload to S3
         uses: hkusu/s3-upload-action@v2
         with:

@@ -368,9 +368,11 @@ def get_acceleration_heatmap(map_hash, run_id, settings_hash):
 ##@memoization_cache.memoize(timeout=TIMEOUT)  # in seconds
 def get_simulation_replay(map_hash: str, settings_hash: str, run_id: str, chart_type: str, filtered_values) -> go.Figure:
     import requests
-    api_url = 'https://ctsbackend.bieda.it/api/simulation'
+    main_api_url = os.environ.get('BACKEND_API_URL', 'https://ctsbackend.bieda.it')
+    api_url = f'{main_api_url}/api/simulation'
+    api_key = os.environ.get('BACKEND_API_KEY', '1234')
     headers = {
-        'ApiKey': '1234'
+        'ApiKey': api_key
     }
     params = {
         'settingsHash': settings_hash,
@@ -488,9 +490,11 @@ def get_simulation_replay(map_hash: str, settings_hash: str, run_id: str, chart_
 
 def get_roads_by_map_hash(map_hash):
     import requests
-    api_url = f'https://ctsbackend.bieda.it/api/maps/{map_hash}'
+    main_api_url = os.environ.get('BACKEND_API_URL', 'https://ctsbackend.bieda.it')
+    api_key = os.environ.get('BACKEND_API_KEY', '1234')
+    api_url = f'{main_api_url}/api/maps/{map_hash}'
     headers = {
-        'ApiKey': '1234'
+        'ApiKey': api_key
     }
     params = {}
     response = requests.get(url=api_url, headers=headers, params=params)
@@ -555,9 +559,11 @@ def fix_fig_layout_for_replay(dataframe_to_plot, fig, metadata, roads):
 
 def backend_call_with_header(map_hash, run_id, settings_hash):
     import requests
-    api_url = 'https://ctsbackend.bieda.it/api/simulation'
+    main_api_url = os.environ.get('BACKEND_API_URL', 'https://ctsbackend.bieda.it')
+    api_url = f'{main_api_url}/api/simulation'
+    api_key = os.environ.get('BACKEND_API_KEY', '1234')
     headers = {
-        'ApiKey': '1234'
+        'ApiKey': api_key
     }
     params = {
         'SettingsHash': settings_hash,

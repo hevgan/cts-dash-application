@@ -24,7 +24,7 @@ import numpy as np
 background_callback_manager = DiskcacheLongCallbackManager(
     background_cache := diskcache.Cache("./cache"),
 )
-random_tags = ['drunk', 'high', 'stupid', 'inexperienced', 'woman', 'bitchy']
+random_tags = ['exampleTag1', 'exampleTag2', 'exampleTag3', 'exampleTag4' ]
 
 app = dash.Dash(__name__,
                 external_stylesheets=[dbc.themes.DARKLY],

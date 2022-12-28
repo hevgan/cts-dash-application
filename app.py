@@ -21,6 +21,8 @@ from typing import Union
 from uuid import uuid4
 import random
 import numpy as np
+import math
+
 background_callback_manager = DiskcacheLongCallbackManager(
     background_cache := diskcache.Cache("./cache"),
 )
@@ -427,7 +429,7 @@ def get_simulation_replay(map_hash: str, settings_hash: str, run_id: str, chart_
             acceleration_x, acceleration_y = car.get('acceleration').get('x'), car.get('acceleration').get('y')
             distance_to_preceding_car = car.get('distanceToPrecedingCar')
             preceding_car_id = car.get('precedingCarId')
-            display_size = 10
+            display_size = 1
 
             # create dataframe row from id, tags, state, velocity_x, velocity_y, position_x, position_y, acceleration_x, acceleration_y, distance_to_preceding_car, preceding_car_id
             df_row = pd.DataFrame(
@@ -452,7 +454,7 @@ def get_simulation_replay(map_hash: str, settings_hash: str, run_id: str, chart_
             'max_y': max_y,
         }
 
-    dataframe_to_plot['display_size'] =  10
+    dataframe_to_plot['display_size'] =  1
 
     # change to get real tags
     dataframe_to_plot['tags'] = np.random.choice( random_tags,    dataframe_to_plot.shape[0])
@@ -480,7 +482,6 @@ def get_simulation_replay(map_hash: str, settings_hash: str, run_id: str, chart_
                      template="plotly_dark",
 
                      )
-
 
     roads = get_roads_by_map_hash(map_hash)
 
@@ -658,8 +659,8 @@ def get_position_heatmap(map_hash, run_id, settings_hash):
 
 
     fig = px.density_heatmap(dataframe_to_plot,
-                             nbinsx=100,
-                             nbinsy=100,
+                             nbinsx=int(math.ceil(abs(metadata.get('max_x') - metadata.get('min_x'))))//2,
+                             nbinsy=int(math.ceil(abs(metadata.get('max_y') - metadata.get('min_y'))))//2,
                              x="position_x",
                              y="position_y",
 

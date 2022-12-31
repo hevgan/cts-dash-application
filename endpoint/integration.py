@@ -16,10 +16,10 @@ from dash.html import Figure
 from icecream import ic
 
 
-
+api_key = os.environ.get('BACKEND_API_KEY', '1234')
 headers = {
     'Content-Type': 'application/json',
-    'ApiKey': '1234'
+    'ApiKey': api_key
 }
 
 
@@ -292,9 +292,11 @@ def get_matching_simulations(map_hash = None, settings_hash = None, run_id = Non
 
 
     print("LOOKING FOR MATCHING SIMULATIONS")
-    api_url = 'https://ctsbackend.bieda.it/api/simulation/list'
+    main_api_url = os.environ.get('BACKEND_API_URL', 'https://ctsbackend.bieda.it')
+    api_url = f'{main_api_url}/api/simulation/list'
+    api_key = os.environ.get('BACKEND_API_KEY', '1234')
     headers = {
-        'ApiKey': '1234'
+        'ApiKey': api_key
     }
 
 
